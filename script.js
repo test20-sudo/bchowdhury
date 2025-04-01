@@ -354,3 +354,132 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
+
+// Add this to your existing script.js file
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize carousel if career section is active
+    function initCarousel() {
+        const carouselTrack = document.querySelector('.carousel-track');
+        if (!carouselTrack) return;
+        
+        const slides = document.querySelectorAll('.carousel-slide');
+        const dots = document.querySelectorAll('.carousel-dot');
+        const prevBtn = document.querySelector('.carousel-control.prev');
+        const nextBtn = document.querySelector('.carousel-control.next');
+        
+        let currentIndex = 0;
+        const slideCount = slides.length;
+        let autoPlayInterval;
+        
+        // Set initial position
+        updateCarousel();
+        
+        // Start autoplay
+        startAutoPlay();
+        
+        // Handle prev button click
+        prevBtn.addEventListener('click', function() {
+            currentIndex = (currentIndex - 1 + slideCount) % slideCount;
+            updateCarousel();
+            resetAutoPlay();
+        });
+        
+        // Handle next button click
+        nextBtn.addEventListener('click', function() {
+            currentIndex = (currentIndex + 1) % slideCount;
+            updateCarousel();
+            resetAutoPlay();
+        });
+        
+        // Handle indicator dots
+        dots.forEach(dot => {
+            dot.addEventListener('click', function() {
+                currentIndex = parseInt(this.getAttribute('data-index'));
+                updateCarousel();
+                resetAutoPlay();
+            });
+        });
+        
+        // Pause autoplay on hover
+        carouselTrack.parentElement.addEventListener('mouseenter', function() {
+            clearInterval(autoPlayInterval);
+        });
+        
+        // Resume autoplay on mouse leave
+        carouselTrack.parentElement.addEventListener('mouseleave', function() {
+            startAutoPlay();
+        });
+        
+        // Touch events for mobile
+        let startX = 0;
+        let endX = 0;
+        
+        carouselTrack.addEventListener('touchstart', function(e) {
+            startX = e.touches[0].clientX;
+            clearInterval(autoPlayInterval);
+        });
+        
+        carouselTrack.addEventListener('touchmove', function(e) {
+            endX = e.touches[0].clientX;
+        });
+        
+        carouselTrack.addEventListener('touchend', function() {
+            const threshold = 50;
+            if (startX - endX > threshold) {
+                // Swipe left, go next
+                currentIndex = (currentIndex + 1) % slideCount;
+                updateCarousel();
+            } else if (endX - startX > threshold) {
+                // Swipe right, go prev
+                currentIndex = (currentIndex - 1 + slideCount) % slideCount;
+                updateCarousel();
+            }
+            startAutoPlay();
+        });
+        
+        // Function to update carousel state
+        function updateCarousel() {
+            // Move slide track
+            carouselTrack.style.transform = `translateX(-${currentIndex * 100}%)`;
+            
+            // Update active dot indicator
+            dots.forEach((dot, index) => {
+                if (index === currentIndex) {
+                    dot.classList.add('active');
+                } else {
+                    dot.classList.remove('active');
+                }
+            });
+        }
+        
+        // Function to start autoplay
+        function startAutoPlay() {
+            clearInterval(autoPlayInterval);
+            autoPlayInterval = setInterval(function() {
+                currentIndex = (currentIndex + 1) % slideCount;
+                updateCarousel();
+            }, 5000); // Change slide every 5 seconds
+        }
+        
+        // Function to reset autoplay
+        function resetAutoPlay() {
+            clearInterval(autoPlayInterval);
+            startAutoPlay();
+        }
+    }
+    
+    // Initialize carousel when career tab is clicked
+    const careerTab = document.querySelector('nav.tabs li a[href="#career"]');
+    if (careerTab) {
+        careerTab.addEventListener('click', function() {
+            // Allow time for tab content to display
+            setTimeout(initCarousel, 100);
+        });
+    }
+    
+    // If career section is initially active
+    if (document.querySelector('#career').style.display !== 'none') {
+        initCarousel();
+    }
+});
