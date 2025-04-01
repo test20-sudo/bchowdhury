@@ -178,4 +178,179 @@ document.addEventListener('DOMContentLoaded', function() {
             stat.setAttribute('data-value', professorStats.papers.display);
         }
     });
+    
+    // Add country flags to career tiles
+    addCountryFlags();
+});
+
+// Function to add country flags to career tiles
+function addCountryFlags() {
+    // Map of countries to their flag codes
+    const countryFlags = {
+        'India': 'in',
+        'Norway': 'no',
+        'Germany': 'de',
+        'Turkey': 'tr',
+        'Saudi Arabia': 'sa',
+        'Netherland': 'nl',
+        'Netherlands': 'nl',
+        'Japan': 'jp'
+    };
+    
+    // Get all career tiles
+    const careerTiles = document.querySelectorAll('.career-tile');
+    
+    careerTiles.forEach(tile => {
+        const placeText = tile.querySelector('.tile-place').textContent.trim();
+        
+        // Check which country is mentioned in the place text
+        for (const [country, flagCode] of Object.entries(countryFlags)) {
+            if (placeText.includes(country)) {
+                // Create flag element
+                const flagElement = document.createElement('span');
+                flagElement.className = 'country-flag';
+                flagElement.innerHTML = `<img src="https://flagcdn.com/24x18/${flagCode}.png" alt="${country} flag" title="${country}">`;
+                
+                // Add flag to the tile-place div
+                const placeElement = tile.querySelector('.tile-place');
+                placeElement.insertBefore(flagElement, placeElement.firstChild);
+                
+                // Add some styling to the tile-place element for proper flag positioning
+                placeElement.style.display = 'flex';
+                placeElement.style.alignItems = 'center';
+                placeElement.style.gap = '8px';
+                break;
+            }
+        }
+    });
+}
+
+// Add this to your script.js file
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize career slider functionality
+    initCareerSlider();
+    
+    // Career section tab functionality
+    const tabs = document.querySelectorAll('.tabs a');
+    tabs.forEach(tab => {
+        tab.addEventListener('click', function(e) {
+            e.preventDefault();
+            const target = this.getAttribute('href');
+            
+            // Hide all sections
+            document.querySelectorAll('main section').forEach(section => {
+                section.style.display = 'none';
+            });
+            
+            // Show target section
+            document.querySelector(target).style.display = 'block';
+            
+            // Update active tab
+            document.querySelectorAll('.tabs li').forEach(li => {
+                li.classList.remove('active');
+            });
+            this.parentElement.classList.add('active');
+        });
+    });
+});
+
+function initCareerSlider() {
+    const slider = document.querySelector('.career-slider');
+    const prevBtn = document.querySelector('.prev-btn');
+    const nextBtn = document.querySelector('.next-btn');
+    
+    if (!slider || !prevBtn || !nextBtn) return;
+    
+    const tileWidth = () => {
+        const tile = slider.querySelector('.career-tile');
+        if (!tile) return 0;
+        return tile.offsetWidth + parseFloat(getComputedStyle(tile).marginRight);
+    };
+    
+    // Modified to always return 1 for single tile scrolling
+    const getVisibleTiles = () => {
+        return 1; // Always scroll exactly 1 tile regardless of screen width
+    };
+    
+    // Navigate slider - always scrolls 1 tile at a time now
+    const navigate = (direction) => {
+        const scrollAmount = tileWidth(); // Only one tile width
+        if (direction === 'next') {
+            slider.scrollLeft += scrollAmount;
+        } else {
+            slider.scrollLeft -= scrollAmount;
+        }
+    };
+    
+    // Add click event listeners
+    nextBtn.addEventListener('click', () => navigate('next'));
+    prevBtn.addEventListener('click', () => navigate('prev'));
+    
+    // Add touch swipe functionality
+    let touchStartX = 0;
+    let touchEndX = 0;
+    
+    slider.addEventListener('touchstart', (e) => {
+        touchStartX = e.changedTouches[0].screenX;
+    }, { passive: true });
+    
+    slider.addEventListener('touchend', (e) => {
+        touchEndX = e.changedTouches[0].screenX;
+        handleSwipe();
+    }, { passive: true });
+    
+    const handleSwipe = () => {
+        if (touchEndX < touchStartX - 50) {
+            navigate('next');
+        } else if (touchEndX > touchStartX + 50) {
+            navigate('prev');
+        }
+    };
+    
+    // Auto-scroll animation - scrolls 1 tile every 5 seconds
+    let autoScrollInterval;
+    
+    const startAutoScroll = () => {
+        autoScrollInterval = setInterval(() => {
+            navigate('next');
+        }, 5000);
+    };
+    
+    const stopAutoScroll = () => {
+        clearInterval(autoScrollInterval);
+    };
+    
+    slider.addEventListener('mouseenter', stopAutoScroll);
+    slider.addEventListener('mouseleave', startAutoScroll);
+    slider.addEventListener('touchstart', stopAutoScroll);
+    
+    // Start auto-scroll
+    startAutoScroll();
+    
+    // Window resize handler
+    window.addEventListener('resize', () => {
+        // No need to do anything special here now since we always scroll 1 tile
+    });
+}
+
+// Fix tab navigation to include the new Career tab
+document.addEventListener('DOMContentLoaded', function() {
+    // Make sure the Career tab is included in the navigation
+    const careerTab = document.querySelector('.tabs a[href="#career"]');
+    if (careerTab) {
+        careerTab.addEventListener('click', function(e) {
+            e.preventDefault();
+            // Hide all sections
+            document.querySelectorAll('main section').forEach(section => {
+                section.style.display = 'none';
+            });
+            // Show career section
+            document.querySelector('#career').style.display = 'block';
+            // Update active tab
+            document.querySelectorAll('.tabs li').forEach(li => {
+                li.classList.remove('active');
+            });
+            this.parentElement.classList.add('active');
+        });
+    }
 });

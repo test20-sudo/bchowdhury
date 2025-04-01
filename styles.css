@@ -571,3 +571,181 @@ footer {
         padding-right: max(20px, env(safe-area-inset-right));
     }
 }
+
+/* Career Section Styles */
+.career-section {
+    padding: 0 0 30px 0;
+}
+
+/* Slider Container */
+.career-slider-container {
+    position: relative;
+    width: 100%;
+    margin: 20px 0;
+}
+
+/* Navigation Buttons */
+.slider-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #1e3a1e;
+    cursor: pointer;
+    z-index: 10;
+    transition: all 0.3s ease;
+}
+
+.slider-nav:hover {
+    background: rgba(255, 255, 255, 0.4);
+    color: #0d290d;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.prev-btn {
+    left: -10px;
+}
+
+.next-btn {
+    right: -10px;
+}
+
+/* Main Slider */
+.career-slider {
+    display: flex;
+    overflow-x: hidden;
+    scroll-behavior: smooth;
+    padding: 20px 10px;
+    gap: 15px;
+    -ms-overflow-style: none; /* Hide scrollbar in IE and Edge */
+    scrollbar-width: none; /* Hide scrollbar in Firefox */
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.career-slider::-webkit-scrollbar {
+    display: none;
+}
+
+/* Career Tile */
+.career-tile {
+    min-width: 280px;
+    flex: 0 0 auto;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    transition: transform 0.3s ease;
+    display: flex;
+    flex-direction: column;
+}
+
+.career-tile:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.1);
+}
+
+/* Tile Parts */
+.tile-designation {
+    padding: 15px;
+    text-align: center;
+    font-weight: 600;
+    color: #1e3a1e;
+    background: rgba(255, 255, 255, 0.3);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.tile-place {
+    padding: 20px 15px;
+    text-align: center;
+    color: white;
+    font-weight: 500;
+    font-size: 1.1rem;
+}
+
+.tile-details {
+    padding: 15px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.tile-duration {
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: #2a592a;
+    border-bottom: 1px dashed rgba(44, 92, 44, 0.2);
+    padding-bottom: 5px;
+}
+
+.tile-description {
+    font-size: 0.9rem;
+    line-height: 1.5;
+    color: #333;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 1200px) {
+    .career-tile {
+        min-width: calc(33.333% - 15px);
+    }
+}
+
+@media (max-width: 992px) {
+    .career-tile {
+        min-width: calc(50% - 15px);
+    }
+}
+
+@media (max-width: 768px) {
+    .career-tile {
+        min-width: calc(100% - 15px);
+    }
+    
+    .slider-nav {
+        width: 35px;
+        height: 35px;
+    }
+    
+    .prev-btn {
+        left: -5px;
+    }
+    
+    .next-btn {
+        right: -5px;
+    }
+}
+
+@media (max-width: 480px) {
+    .career-slider {
+        padding: 15px 5px;
+        gap: 10px;
+    }
+    
+    .tile-designation {
+        padding: 12px;
+        font-size: 0.9rem;
+    }
+    
+    .tile-place {
+        padding: 15px 12px;
+        font-size: 1rem;
+    }
+    
+    .tile-details {
+        padding: 12px;
+    }
+    
+    .tile-description {
+        font-size: 0.85rem;
+    }
+}
