@@ -545,3 +545,65 @@ document.addEventListener('DOMContentLoaded', function() {
         setTimeout(startAutoScroll, 2000);
     });
 });
+
+// Function to handle form submission
+function sendEmail(event) {
+    event.preventDefault();
+    
+    // Get form values
+    const name = document.getElementById('name').value;
+    const email = document.getElementById('email').value;
+    const subject = document.getElementById('subject').value;
+    const message = document.getElementById('message').value;
+    
+    // Email addresses to send the form data to
+    const recipientEmail = "pradiptochowdhury6@gmail.com";
+    const labEmail = "greencatal20@gmail.com";
+    
+    // Create mailto link
+    const mailtoLink = `mailto:${recipientEmail},${labEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\n${message}`)}`;
+    
+    // Open email client
+    window.location.href = mailtoLink;
+    
+    // Optional: You can also use an AJAX request to send the form data to a server-side script
+    // which would then send the email using a service like PHPMailer, Nodemailer, etc.
+    
+    // Show success message
+    alert('Thank you for your message. We will get back to you soon!');
+    
+    // Reset form
+    document.getElementById('contactForm').reset();
+}
+
+// Tab functionality (if not already in your main script)
+document.addEventListener('DOMContentLoaded', function() {
+    const tabs = document.querySelectorAll('.tabs li a');
+    const sections = document.querySelectorAll('main section');
+    
+    tabs.forEach(tab => {
+        tab.addEventListener('click', function(e) {
+            e.preventDefault();
+            const target = this.getAttribute('href');
+            
+            // Hide all sections
+            sections.forEach(section => {
+                section.style.display = 'none';
+            });
+            
+            // Show target section
+            document.querySelector(target).style.display = 'block';
+            
+            // Add active class to clicked tab
+            tabs.forEach(tab => {
+                tab.parentElement.classList.remove('active');
+            });
+            this.parentElement.classList.add('active');
+            
+            // Add 'active' class to the section for animation
+            setTimeout(() => {
+                document.querySelector(target).classList.add('active');
+            }, 100);
+        });
+    });
+});

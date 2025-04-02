@@ -49,9 +49,9 @@
         <nav class="tabs">
             <ul>
                 <li class="active"><a href="#about">About</a></li>
-                <li><a href="#career">Career</a></li>
-                <li><a href="#contact">Research</a></li>
-                <li><a href="#research">Contact</a></li>
+                <li><a href="#career">Experience</a></li>
+                <li><a href="#research">Research</a></li>
+                <li><a href="#contact">Contact</a></li>
                 <li class="special"><a href="#lab">Lab</a></li>
             </ul>
         </nav>
@@ -433,6 +433,89 @@
             
             <section id="contact" class="contact-section" style="display: none;">
                 <!-- Contact content will be shown via JavaScript -->
+                <h2 class="section-title">Contact</h2>
+    
+                <div class="contact-container">
+                    <div class="contact-info glassmorphic">
+                        <h3>Contact Information</h3>
+                        <div class="contact-details">
+                            <div class="contact-item">
+                                <i class="fas fa-building"></i>
+                                <div>
+                                    <h4>Department</h4>
+                                    <p>Department of Chemistry and Chemical Biology</p>
+                                    <p>IIT (ISM) Dhanbad</p>
+                                </div>
+                            </div>
+                            
+                            <div class="contact-item">
+                                <i class="fas fa-phone-alt"></i>
+                                <div>
+                                    <h4>Phone</h4>
+                                    <p>Office: +91-326-2235663</p>
+                                    <p>Mobile: +91-9470194350 / +91-6201278816</p>
+                                </div>
+                            </div>
+                            
+                            <div class="contact-item">
+                                <i class="fas fa-envelope"></i>
+                                <div>
+                                    <h4>Email</h4>
+                                    <p>Office: biswajit72@iitism.ac.in</p>
+                                    <p>Lab: greencatal20@gmail.com</p>
+                                </div>
+                            </div>
+                            
+                            <div class="contact-item">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <div>
+                                    <h4>Address</h4>
+                                    <p>Lab No. 209, Science Block,</p>
+                                    <p>IIT(ISM), Dhanbad</p>
+                                    <p>Dhanbad-826004</p>
+                                    <p>Jharkhand, India</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="contact-form glassmorphic">
+                        <h3>Send a Message</h3>
+                        <form id="contactForm" onsubmit="sendEmail(event)">
+                            <div class="form-group">
+                                <label for="name">Name</label>
+                                <input type="text" id="name" name="name" required placeholder="Your Name">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="email">Email</label>
+                                <input type="email" id="email" name="email" required placeholder="Your Email">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="subject">Subject</label>
+                                <input type="text" id="subject" name="subject" required placeholder="Subject">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="message">Message</label>
+                                <textarea id="message" name="message" rows="5" required placeholder="Your Message"></textarea>
+                            </div>
+                            
+                            <button type="submit" class="submit-btn">
+                                <i class="fas fa-paper-plane"></i> Send Message
+                            </button>
+                        </form>
+                    </div>
+                </div>
+                
+                <div class="map-container glassmorphic">
+                    <h3>Location</h3>
+                    <div class="map-placeholder">
+                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3650.5983057912087!2d86.43732281497945!3d23.81460738456283!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39f6bc9fac678481%3A0x122cb5d151a58df4!2sIndian%20Institute%20of%20Technology%20(Indian%20School%20of%20Mines)%2C%20Dhanbad!5e0!3m2!1sen!2sin!4v1648988456789!5m2!1sen!2sin" 
+                                width="100%" height="300" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+                    </div>
+                </div>
             </section>
             
             <section id="research" class="research-section" style="display: none;">
