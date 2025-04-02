@@ -928,7 +928,7 @@ footer {
 
 /* Info Tile Styling */
 .career-info-tile {
-    background: rgba(255, 255, 255, 0.15);
+    background: rgba(210, 240, 225, 0.15);
     backdrop-filter: blur(10px);
     border-radius: 15px;
     overflow: hidden;
@@ -1004,4 +1004,119 @@ footer {
 
 .info-content::-webkit-scrollbar-thumb:hover {
     background: rgba(30, 58, 30, 0.5);
+}
+/* Add to your CSS file */
+
+/* Additional Career Sections Container */
+.career-additional-sections {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+    margin-top: 30px;
+    padding: 0 10px;
+}
+
+@media (min-width: 768px) {
+    .career-additional-sections {
+        grid-template-columns: 1fr 1fr;
+        gap: 30px;
+        padding: 0;
+    }
+}
+
+/* Session Chair and Special Lectures Styling */
+.session-chair-tile,
+.special-lectures-tile {
+    height: 400px;
+}
+
+.autoscroll-content {
+    position: relative;
+    height: calc(100% - 50px);
+}
+
+.session-item,
+.lecture-item {
+    padding: 12px 0;
+    border-bottom: 1px dashed rgba(44, 92, 44, 0.15);
+}
+
+.session-item:last-child,
+.lecture-item:last-child {
+    border-bottom: none;
+}
+
+.session-item p,
+.lecture-item p {
+    margin: 0;
+    line-height: 1.6;
+}
+
+.session-item strong,
+.lecture-item strong {
+    color: #1e3a1e;
+}
+
+.lecture-item em {
+    font-style: italic;
+    color: #2a592a;
+}
+
+/* Scroll indicator */
+.scroll-indicator {
+    position: absolute;
+    bottom: 5px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: rgba(44, 92, 44, 0.5);
+    font-size: 0.8rem;
+    opacity: 1;
+    transition: opacity 0.5s ease;
+}
+
+.scroll-indicator.hidden {
+    opacity: 0;
+}
+
+.session-chair-tile {
+    background: rgba(230, 240, 210, 0.15);
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(230, 240, 210, 0.2);
+}
+
+.session-chair-tile h3 {
+    color: #2a591c;
+}
+
+.session-item strong {
+    color: #2a591c;
+}
+
+/* Special Lectures - Subtle cyan-green tint */
+.special-lectures-tile {
+    background: rgba(210, 235, 240, 0.15);
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(210, 235, 240, 0.2);
+}
+
+.special-lectures-tile h3 {
+    color: #186858;
+}
+
+.lecture-item em {
+    color: #186858;
+}
+
+/* Add a slight hover effect to distinguish sections */
+.career-info-tile:hover,
+.session-chair-tile:hover,
+.special-lectures-tile:hover {
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.25);
 }

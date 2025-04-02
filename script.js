@@ -483,3 +483,65 @@ document.addEventListener('DOMContentLoaded', function() {
         initCarousel();
     }
 });
+
+
+
+
+// Add to your script.js file
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Auto-scrolling functionality
+    const autoscrollElements = document.querySelectorAll('.autoscroll-content');
+    
+    autoscrollElements.forEach(element => {
+        let isScrolling = true;
+        let hasInteracted = false;
+        let scrollSpeed = 0.5; // pixels per interval
+        let scrollInterval;
+        
+        // Add scroll indicator
+        const indicator = document.createElement('div');
+        indicator.className = 'scroll-indicator';
+        indicator.innerHTML = '<i class="fas fa-arrow-down"></i> Scroll for more';
+        element.appendChild(indicator);
+        
+        // Start auto-scrolling
+        function startAutoScroll() {
+            if (isScrolling && !hasInteracted) {
+                scrollInterval = setInterval(() => {
+                    element.scrollTop += scrollSpeed;
+                    
+                    // Reset to top when reaching bottom
+                    if (element.scrollTop + element.clientHeight >= element.scrollHeight) {
+                        element.scrollTop = 0;
+                    }
+                }, 30);
+            }
+        }
+        
+        // Stop on user interaction
+        element.addEventListener('wheel', function() {
+            hasInteracted = true;
+            isScrolling = false;
+            indicator.classList.add('hidden');
+            if (scrollInterval) clearInterval(scrollInterval);
+        });
+        
+        element.addEventListener('touchstart', function() {
+            hasInteracted = true;
+            isScrolling = false;
+            indicator.classList.add('hidden');
+            if (scrollInterval) clearInterval(scrollInterval);
+        });
+        
+        element.addEventListener('mousedown', function() {
+            hasInteracted = true;
+            isScrolling = false;
+            indicator.classList.add('hidden');
+            if (scrollInterval) clearInterval(scrollInterval);
+        });
+        
+        // Delay start to ensure DOM is fully loaded
+        setTimeout(startAutoScroll, 2000);
+    });
+});
