@@ -607,3 +607,182 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 });
+
+
+
+
+// JavaScript for the project carousel with fixed auto-scrolling and click functionality
+document.addEventListener('DOMContentLoaded', function() {
+    const researchSection = document.querySelector('#research.research-section');
+    
+    if (researchSection) {
+        const carousel = researchSection.querySelector('.project-carousel');
+        const tiles = researchSection.querySelectorAll('.project-tile');
+        const prevBtn = researchSection.querySelector('.prev-btn');
+        const nextBtn = researchSection.querySelector('.next-btn');
+        
+        if (carousel && tiles.length > 0 && prevBtn && nextBtn) {
+            let currentPosition = 0;
+            const totalTiles = tiles.length;
+            
+            function getTilesPerView() {
+                const width = window.innerWidth;
+                if (width < 576) return 1;
+                if (width < 768) return 1; 
+                if (width < 992) return 2;
+                if (width < 1200) return 3;
+                return 3; // Show more tiles on large screens
+            }
+            
+            function updateCarouselLayout() {
+                const tilesPerView = getTilesPerView();
+                const containerWidth = carousel.parentElement.offsetWidth - 100; // Account for padding
+                const tileWidth = (containerWidth / tilesPerView) - 24; // Account for gap properly
+                const gap = 24; // 1.5rem gap
+                
+                // Update max position based on screen size and ensure it's not less than 0
+                const maxScroll = Math.max(0, totalTiles - tilesPerView);
+                
+                // Ensure current position is valid
+                currentPosition = Math.min(currentPosition, maxScroll);
+                
+                // Set width for each tile - make sure ALL tiles get the same treatment
+                tiles.forEach((tile, index) => {
+                    tile.style.width = `${tileWidth}px`;
+                    tile.style.marginRight = `${gap}px`;
+                    
+                    // Make sure all tiles have the same container properties
+                    tile.style.flex = '0 0 auto';
+                    tile.style.boxSizing = 'border-box';
+                    tile.style.display = 'flex';
+                    tile.style.flexDirection = 'column';
+                    
+                    // Ensure last tile doesn't have margin (causes alignment issues)
+                    if (index === tiles.length - 1) {
+                        tile.style.marginRight = '0';
+                    }
+                });
+                
+                // Remove the min-width to fix the unusual width issue
+                carousel.style.minWidth = '';
+                
+                return {
+                    tilesPerView,
+                    tileWidth,
+                    gap,
+                    maxScroll
+                };
+            }
+            
+            function moveCarousel(direction) {
+                const { tilesPerView, tileWidth, gap, maxScroll } = updateCarouselLayout();
+                
+                // Implement infinite scrolling
+                if (direction === 'next') {
+                    if (currentPosition >= maxScroll) {
+                        // Immediate reset to beginning without animation
+                        carousel.style.transition = 'none';
+                        currentPosition = 0;
+                        carousel.style.transform = 'translateX(0)';
+                        // Force reflow
+                        void carousel.offsetHeight;
+                        // Restore animation
+                        carousel.style.transition = 'transform 0.3s ease-in-out';
+                    } else {
+                        currentPosition++;
+                    }
+                } else if (direction === 'prev') {
+                    if (currentPosition <= 0) {
+                        // Jump to end without animation
+                        carousel.style.transition = 'none';
+                        currentPosition = maxScroll;
+                        const moveAmount = currentPosition * (tileWidth + gap);
+                        carousel.style.transform = `translateX(-${moveAmount}px)`;
+                        // Force reflow
+                        void carousel.offsetHeight;
+                        // Restore animation
+                        carousel.style.transition = 'transform 0.3s ease-in-out';
+                    } else {
+                        currentPosition--;
+                    }
+                }
+                
+                // Calculate the exact transform value including gap
+                const moveAmount = currentPosition * (tileWidth + gap);
+                carousel.style.transform = `translateX(-${moveAmount}px)`;
+                
+                // Enable both buttons for infinite scrolling
+                prevBtn.style.opacity = '1';
+                prevBtn.disabled = false;
+                nextBtn.style.opacity = '1';
+                nextBtn.disabled = false;
+            }
+            
+            // Initialize carousel
+            carousel.style.display = 'flex';
+            carousel.style.transition = 'transform 0.3s ease-in-out';
+            carousel.style.width = 'auto'; // Let it expand as needed
+            
+            // Initial layout
+            updateCarouselLayout();
+            moveCarousel();
+            
+            // Event Listeners
+            prevBtn.addEventListener('click', () => moveCarousel('prev'));
+            nextBtn.addEventListener('click', () => moveCarousel('next'));
+            
+            // Handle window resize
+            let resizeTimer;
+            window.addEventListener('resize', () => {
+                clearTimeout(resizeTimer);
+                resizeTimer = setTimeout(() => {
+                    updateCarouselLayout();
+                    moveCarousel();
+                }, 200);
+            });
+            
+            // Add touch swipe functionality with improved sensitivity
+            let touchStartX = 0;
+            let touchEndX = 0;
+            
+            carousel.addEventListener('touchstart', (e) => {
+                touchStartX = e.changedTouches[0].screenX;
+            }, { passive: true });
+            
+            carousel.addEventListener('touchend', (e) => {
+                touchEndX = e.changedTouches[0].screenX;
+                const swipeThreshold = 30; // Reduced threshold for better responsiveness
+                
+                if (touchStartX - touchEndX > swipeThreshold) {
+                    moveCarousel('next');
+                } else if (touchEndX - touchStartX > swipeThreshold) {
+                    moveCarousel('prev');
+                }
+            }, { passive: true });
+            
+            // Auto-scrolling functionality
+            let autoScrollInterval;
+            
+            function startAutoScroll() {
+                stopAutoScroll();
+                autoScrollInterval = setInterval(() => {
+                    moveCarousel('next');
+                }, 30000); // Scroll every 5 seconds
+            }
+            
+            function stopAutoScroll() {
+                if (autoScrollInterval) {
+                    clearInterval(autoScrollInterval);
+                }
+            }
+            
+            // Start auto-scroll
+            startAutoScroll();
+            
+            // Stop on user interaction
+            carousel.addEventListener('mouseenter', stopAutoScroll);
+            carousel.addEventListener('mouseleave', startAutoScroll);
+            carousel.addEventListener('touchstart', stopAutoScroll);
+        }
+    }
+});

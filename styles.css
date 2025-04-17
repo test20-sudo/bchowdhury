@@ -1121,7 +1121,7 @@ footer {
     border: 1px solid rgba(255, 255, 255, 0.25);
 }
 
-/* Contact Section Styles */
+
 .research-section {
     padding: 40px 0;
     opacity: 0;
@@ -1301,5 +1301,194 @@ footer {
     
     .contact-item i {
         margin-bottom: 10px;
+    }
+}
+
+/* Research Section Styles */
+
+.research-section {
+    padding: 0 0 30px 0;
+}
+
+.project-carousel-container {
+    position: relative;
+    width: 100%;
+    padding: 0 50px;
+    margin: 2rem 0;
+    overflow: hidden; /* Keep this to hide overflow */
+}
+
+.project-carousel {
+    display: flex;
+    overflow: visible; /* Keep this as visible */
+    gap: 1.5rem;
+    padding: 1rem 0.5rem;
+    scroll-behavior: smooth;
+    width: auto; /* Let carousel size itself naturally */
+    max-width: none; /* Remove any max-width limits */
+}
+
+.project-tile {
+    flex: 0 0 auto;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    padding: 1.75rem;
+    position: relative;
+    min-height: 320px; 
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box; /* Keep this */
+    width: 100%; /* Base width, to be overridden by inline styles */
+}
+
+.project-tile:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+.project-status {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #888;
+    padding: 0.35rem 0.6rem;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+}
+
+.project-status.current {
+    color: #2d7f31;
+}
+
+.status-indicator {
+    display: inline-block;
+    width: 6px; /* Smaller from 10px */
+    height: 6px; /* Smaller from 10px */
+    border-radius: 50%;
+    background-color: #888;
+}
+
+.project-status.current .status-indicator {
+    background-color: #2d7f31;
+    box-shadow: 0 0 6px #2d7f31;
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        opacity: 0.5;
+        transform: scale(0.8);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1.2);
+    }
+    100% {
+        opacity: 0.5;
+        transform: scale(0.8);
+    }
+}
+
+.project-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-top: 0.5rem;
+    margin-bottom: 1.25rem;
+    color: #2d7f31;
+}
+
+.project-details {
+    font-size: 0.9rem;
+    line-height: 1.5;
+    overflow-y: auto;
+    flex-grow: 1;
+    padding-right: 0.5rem;
+    max-height: 200px; /* Add a max height */
+}
+
+.project-details p {
+    margin-bottom: 0.75rem;
+}
+
+/* Slider Navigation */
+.slider-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.25);
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #333;
+    font-size: 1rem;
+    transition: all 0.2s ease;
+}
+
+.slider-nav:hover {
+    background: rgba(255, 255, 255, 0.4);
+}
+
+.prev-btn {
+    left: 5px;
+}
+
+.next-btn {
+    right: 5px;
+}
+
+.slider-nav:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+/* Responsive Adjustments - these will be overridden by inline JS styles */
+@media (max-width: 575px) {
+    .project-tile {
+        width: 100% !important;
+        min-height: 340px;
+        margin-right: 1rem !important;
+    }
+    
+    .project-carousel-container {
+        padding: 0 35px;
+    }
+    
+    .project-carousel {
+        gap: 1rem;
+    }
+}
+
+@media (min-width: 576px) and (max-width: 767px) {
+    .project-tile {
+        width: 100% !important;
+        min-height: 330px;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+    .project-carousel-container {
+        padding: 0 40px;
+    }
+}
+
+@media (min-width: 1200px) {
+    .project-carousel-container {
+        padding: 0 60px;
     }
 }
