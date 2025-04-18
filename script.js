@@ -1017,6 +1017,9 @@ function initPublicationsScroll() {
     let userInteracted = false;
     let scrollSpeed = 1; // pixels per interval
     
+    // Add search bar to publications
+    addPublicationsSearch(publicationsList, publicationItems);
+    
     // Apply hover effects to publication items
     publicationItems.forEach(item => {
         const link = item.querySelector('.publication-link');
@@ -1088,5 +1091,81 @@ function initPublicationsScroll() {
         if (autoScrollInterval) {
             clearInterval(autoScrollInterval);
         }
+    }
+}
+
+// Function to add search functionality to publications
+function addPublicationsSearch(publicationsList, publicationItems) {
+    // Check if a search container already exists
+    const existingSearch = document.querySelector('.publications-search');
+    if (existingSearch) {
+        return; // Exit if search bar already exists
+    }
+    
+    // Create search container
+    const searchContainer = document.createElement('div');
+    searchContainer.className = 'publications-search glassmorphic';
+    searchContainer.setAttribute('data-color', 'rgba(105, 162, 151, 0.15)');
+    
+    // Create search input
+    const searchInput = document.createElement('input');
+    searchInput.type = 'text';
+    searchInput.placeholder = 'Find by Name/Year/Author...';
+    searchInput.className = 'publications-search-input';
+    
+    // Create search icon
+    const searchIcon = document.createElement('i');
+    searchIcon.className = 'fas fa-search search-icon';
+    
+    // Add elements to container
+    searchContainer.appendChild(searchIcon);
+    searchContainer.appendChild(searchInput);
+    
+    // Find the showcase title to insert after it
+    const showcaseTitle = publicationsList.parentNode.querySelector('.showcase-title');
+    if (showcaseTitle) {
+        showcaseTitle.insertAdjacentElement('afterend', searchContainer);
+    } else {
+        // Fallback - insert before publications list
+        publicationsList.parentNode.insertBefore(searchContainer, publicationsList);
+    }
+    
+    // Add search functionality
+    searchInput.addEventListener('input', function() {
+        const searchQuery = this.value.toLowerCase().trim();
+        
+        publicationItems.forEach(item => {
+            const title = item.querySelector('.publication-title').textContent.toLowerCase();
+            const authors = item.querySelector('.publication-authors').textContent.toLowerCase();
+            const journal = item.querySelector('.publication-journal').textContent.toLowerCase();
+            
+            if (title.includes(searchQuery) || 
+                authors.includes(searchQuery) || 
+                journal.includes(searchQuery)) {
+                item.style.display = 'block';
+            } else {
+                item.style.display = 'none';
+            }
+        });
+        
+        // Stop auto-scrolling when searching
+        if (searchQuery.length > 0) {
+            stopAutoScrollPermanently();
+        }
+    });
+    
+    // Clear search on X button click (for browsers that support it)
+    searchInput.addEventListener('search', function() {
+        if (this.value === '') {
+            // Reset all items to visible
+            publicationItems.forEach(item => {
+                item.style.display = 'block';
+            });
+        }
+    });
+    
+    function stopAutoScrollPermanently() {
+        const event = new Event('mousedown');
+        publicationsList.dispatchEvent(event);
     }
 }
