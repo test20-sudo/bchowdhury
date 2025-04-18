@@ -1,5 +1,32 @@
 // Wait for the DOM to be fully loaded
 document.addEventListener('DOMContentLoaded', function() {
+    // Ensure research section is properly initialized
+    const researchSection = document.getElementById('research');
+    const researchTab = document.querySelector('.tabs a[href="#research"]');
+    
+    if (researchSection && researchTab) {
+        // Fix any display issues with the research section
+        researchTab.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            // Hide all sections
+            document.querySelectorAll('main > section').forEach(section => {
+                section.style.display = 'none';
+            });
+            
+            // Show research section
+            researchSection.style.display = 'block';
+            researchSection.style.opacity = '1';
+            researchSection.style.transform = 'translateY(0)';
+            
+            // Update active tab
+            document.querySelectorAll('.tabs li').forEach(li => {
+                li.classList.remove('active');
+            });
+            this.parentElement.classList.add('active');
+        });
+    }
+    
     // More subtle background animation
     const backgroundElement = document.querySelector('.background-animation');
     let mouseX = 0;
@@ -786,3 +813,280 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 });
+
+// Research Gallery and Publications Functionality
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize research gallery
+    initResearchGallery();
+    
+    // Initialize publications autoscrolling
+    initPublicationsScroll();
+    
+    // Apply glassmorphic effect
+    applyGlassmorphicEffect();
+    
+    // When research tab is clicked, make sure sections are initialized
+    const researchTab = document.querySelector('.tabs a[href="#research"]');
+    if (researchTab) {
+        researchTab.addEventListener('click', function() {
+            // Short delay to ensure section is visible
+            setTimeout(() => {
+                initResearchGallery();
+                initPublicationsScroll();
+                applyGlassmorphicEffect();
+            }, 100);
+        });
+    }
+});
+
+// Function to apply glassmorphic effect based on data-color attribute
+function applyGlassmorphicEffect() {
+    document.querySelectorAll('.glassmorphic[data-color]').forEach(element => {
+        const color = element.getAttribute('data-color');
+        if (color) {
+            // Apply subtle hover effect
+            element.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-5px)';
+                this.style.boxShadow = '0 12px 30px rgba(0, 0, 0, 0.15)';
+            });
+            
+            element.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0)';
+                this.style.boxShadow = '0 8px 32px rgba(0, 0, 0, 0.1)';
+            });
+        }
+    });
+}
+
+function initResearchGallery() {
+    const galleryTrack = document.querySelector('.gallery-track');
+    if (!galleryTrack) return;
+    
+    const galleryItems = document.querySelectorAll('.gallery-item');
+    const prevBtn = document.querySelector('.gallery-control.prev');
+    const nextBtn = document.querySelector('.gallery-control.next');
+    const lightbox = document.getElementById('gallery-lightbox');
+    const lightboxImg = document.getElementById('lightbox-img');
+    const lightboxClose = document.querySelector('.lightbox-close');
+    
+    let currentIndex = 0;
+    let autoScrollInterval;
+    let userInteracted = false;
+    let pauseTimer;
+    
+    // Set initial position
+    updateGallery();
+    
+    // Start auto-scrolling
+    startAutoScroll();
+    
+    // Previous button click
+    prevBtn.addEventListener('click', function() {
+        currentIndex = (currentIndex - 1 + galleryItems.length) % galleryItems.length;
+        updateGallery();
+        userInteractionHandler();
+    });
+    
+    // Next button click
+    nextBtn.addEventListener('click', function() {
+        currentIndex = (currentIndex + 1) % galleryItems.length;
+        updateGallery();
+        userInteractionHandler();
+    });
+    
+    // Handle clicking on images to open lightbox
+    galleryItems.forEach((item, index) => {
+        const img = item.querySelector('img');
+        if (img) {
+            img.addEventListener('click', function() {
+                openLightbox(img.src, img.alt);
+                userInteractionHandler();
+            });
+            
+            // Add hover effect to images
+            img.addEventListener('mouseenter', function() {
+                this.style.transform = 'scale(1.05)';
+                this.style.boxShadow = '0 8px 20px rgba(0, 0, 0, 0.15)';
+            });
+            
+            img.addEventListener('mouseleave', function() {
+                if (!lightbox.classList.contains('active')) {
+                    this.style.transform = 'scale(1)';
+                    this.style.boxShadow = '0 4px 10px rgba(0, 0, 0, 0.1)';
+                }
+            });
+        }
+    });
+    
+    // Close lightbox
+    lightboxClose.addEventListener('click', function() {
+        lightbox.classList.remove('active');
+    });
+    
+    // Close lightbox on background click
+    lightbox.addEventListener('click', function(e) {
+        if (e.target === lightbox) {
+            lightbox.classList.remove('active');
+        }
+    });
+    
+    // Keyboard navigation
+    document.addEventListener('keydown', function(e) {
+        if (lightbox.classList.contains('active')) {
+            if (e.key === 'Escape') {
+                lightbox.classList.remove('active');
+            }
+        }
+    });
+    
+    // Swipe functionality for gallery
+    let touchStartX = 0;
+    let touchEndX = 0;
+    
+    galleryTrack.addEventListener('touchstart', function(e) {
+        touchStartX = e.touches[0].clientX;
+        userInteractionHandler();
+    }, { passive: true });
+    
+    galleryTrack.addEventListener('touchend', function(e) {
+        touchEndX = e.changedTouches[0].clientX;
+        const swipeThreshold = 50;
+        
+        if (touchStartX - touchEndX > swipeThreshold) {
+            currentIndex = (currentIndex + 1) % galleryItems.length;
+            updateGallery();
+        } else if (touchEndX - touchStartX > swipeThreshold) {
+            currentIndex = (currentIndex - 1 + galleryItems.length) % galleryItems.length;
+            updateGallery();
+        }
+    }, { passive: true });
+    
+    // Function to update gallery position
+    function updateGallery() {
+        galleryTrack.style.transform = `translateX(-${currentIndex * 100}%)`;
+    }
+    
+    // Function to open lightbox
+    function openLightbox(src, alt) {
+        lightboxImg.src = src;
+        lightboxImg.alt = alt;
+        document.querySelector('.lightbox-caption').textContent = alt;
+        lightbox.classList.add('active');
+    }
+    
+    // Handle user interaction with 50 second pause
+    function userInteractionHandler() {
+        userInteracted = true;
+        stopAutoScroll();
+        
+        // Clear any existing pause timer
+        if (pauseTimer) clearTimeout(pauseTimer);
+        
+        // Set new pause timer for 50 seconds
+        pauseTimer = setTimeout(() => {
+            userInteracted = false;
+            startAutoScroll();
+        }, 50000); // 50 seconds
+    }
+    
+    // Start auto-scrolling
+    function startAutoScroll() {
+        if (!userInteracted) {
+            stopAutoScroll();
+            autoScrollInterval = setInterval(() => {
+                currentIndex = (currentIndex + 1) % galleryItems.length;
+                updateGallery();
+            }, 5000); // Scroll every 5 seconds
+        }
+    }
+    
+    // Stop auto-scrolling
+    function stopAutoScroll() {
+        if (autoScrollInterval) {
+            clearInterval(autoScrollInterval);
+        }
+    }
+}
+
+function initPublicationsScroll() {
+    const publicationsList = document.querySelector('.publications-list');
+    if (!publicationsList) return;
+    
+    const publicationItems = document.querySelectorAll('.publication-item');
+    let autoScrollInterval;
+    let userInteracted = false;
+    let scrollSpeed = 1; // pixels per interval
+    
+    // Apply hover effects to publication items
+    publicationItems.forEach(item => {
+        const link = item.querySelector('.publication-link');
+        
+        item.addEventListener('mouseenter', function() {
+            this.style.backgroundColor = 'rgba(105, 162, 151, 0.15)';
+            this.style.transform = 'translateX(5px)';
+            this.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.08)';
+            
+            if (link) {
+                link.style.transform = 'scale(1.1)';
+            }
+        });
+        
+        item.addEventListener('mouseleave', function() {
+            this.style.backgroundColor = '';
+            this.style.transform = 'translateX(0)';
+            this.style.boxShadow = 'none';
+            
+            if (link) {
+                link.style.transform = 'scale(1)';
+            }
+        });
+    });
+    
+    // Start auto-scrolling
+    startAutoScroll();
+    
+    // Handle user interaction (mouse wheel, touch, click)
+    publicationsList.addEventListener('wheel', stopAutoScrollPermanently);
+    publicationsList.addEventListener('touchstart', stopAutoScrollPermanently, { passive: true });
+    publicationsList.addEventListener('mousedown', stopAutoScrollPermanently);
+    
+    // Publication link clicks
+    const publicationLinks = document.querySelectorAll('.publication-link');
+    publicationLinks.forEach(link => {
+        link.addEventListener('click', stopAutoScrollPermanently);
+    });
+    
+    // Function to permanently stop auto-scrolling after any user interaction
+    function stopAutoScrollPermanently() {
+        userInteracted = true;
+        stopAutoScroll();
+        
+        // No timer to restart - once stopped, it stays stopped
+        console.log('Publications autoscroll permanently stopped after user interaction');
+    }
+    
+    // Start auto-scrolling
+    function startAutoScroll() {
+        if (!userInteracted) {
+            stopAutoScroll();
+            autoScrollInterval = setInterval(() => {
+                publicationsList.scrollTop += scrollSpeed;
+                
+                // If reached the bottom, reset to top
+                if (publicationsList.scrollTop >= (publicationsList.scrollHeight - publicationsList.clientHeight)) {
+                    // Add small delay before resetting
+                    setTimeout(() => {
+                        publicationsList.scrollTop = 0;
+                    }, 1000);
+                }
+            }, 30); // Update every 30ms for smooth scrolling
+        }
+    }
+    
+    // Stop auto-scrolling
+    function stopAutoScroll() {
+        if (autoScrollInterval) {
+            clearInterval(autoScrollInterval);
+        }
+    }
+}
